@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CPP03 – Single Inheritance Study Sheet</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 40px;
+    background: #f9f9f9;
+    color: #222;
+}
+h1, h2, h3 {
+    color: #2c3e50;
+}
+code, pre {
+    background: #eee;
+    padding: 5px;
+    border-radius: 4px;
+}
+.section {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-left: 6px solid #3498db;
+}
+.note {
+    background: #fff8dc;
+    padding: 10px;
+    border-left: 6px solid #f1c40f;
+}
+.confusion {
+    background: #ffecec;
+    padding: 10px;
+    border-left: 6px solid #e74c3c;
+}
+</style>
+</head>
+
+<body>
+
+<h1>CPP03 – Single Inheritance (ex00, ex01, ex02)</h1>
+
+<div class="section">
+<h2>Big Picture</h2>
+<p>
+CPP03 teaches <strong>single inheritance</strong>: modeling real-world specialization where
+a derived class <em>IS A</em> more specific version of a base class.
+</p>
+</div>
+
+<div class="section">
+<h2>ex00 – ClapTrap (Base Class)</h2>
+<ul>
+<li>Owns all attributes: <code>_name</code>, <code>_hitPoints</code>, <code>_energyPoints</code>, <code>_attackDamage</code></li>
+<li>Attributes are <strong>protected</strong> (accessible to children)</li>
+<li>Implements:
+    <ul>
+        <li><code>attack()</code></li>
+        <li><code>takeDamage()</code></li>
+        <li><code>beRepaired()</code></li>
+    </ul>
+</li>
+<li>Initial values:
+    <ul>
+        <li>HP = 10</li>
+        <li>Energy = 10</li>
+        <li>Damage = 0</li>
+    </ul>
+</li>
+</ul>
+</div>
+
+<div class="confusion">
+<h3>Common Confusion: “Why is damage 0?”</h3>
+<p>
+Because the subject explicitly sets <code>_attackDamage = 0</code> in ex00.
+Damage becomes meaningful only in derived classes (ScavTrap, FragTrap).
+</p>
+</div>
+
+<div class="section">
+<h2>Key Concept: Constructors vs Assignment</h2>
+<p><strong>Constructors create objects.</strong></p>
+<p><strong>Assignment replaces values.</strong></p>
+<p>
+Every constructor must initialize all attributes.
+</p>
+</div>
+
+<div class="section">
+<h2>ex01 – ScavTrap</h2>
+<ul>
+<li><code>class ScavTrap : public ClapTrap</code></li>
+<li>No new attributes</li>
+<li>Initial values:
+    <ul>
+        <li>HP = 100</li>
+        <li>Energy = 50</li>
+        <li>Damage = 20</li>
+    </ul>
+</li>
+<li>Overrides <code>attack()</code> (same logic, different message)</li>
+<li>Adds <code>guardGate()</code></li>
+</ul>
+</div>
+
+<div class="confusion">
+<h3>Why <code>public ClapTrap</code>?</h3>
+<p>
+Public inheritance preserves the <strong>IS-A</strong> relationship.
+ScavTrap must be usable anywhere a ClapTrap is expected.
+</p>
+</div>
+
+<div class="section">
+<h2>Base Constructor Call</h2>
+<pre>
+ScavTrap::ScavTrap(const std::string &name) : ClapTrap(name)
+</pre>
+<p>
+Base class constructors run <strong>before</strong> derived constructors.
+The initializer list is the only place where you can choose
+which base constructor is called.
+</p>
+</div>
+
+<div class="section">
+<h2>ex02 – FragTrap</h2>
+<ul>
+<li>Same inheritance as ScavTrap</li>
+<li>Initial values:
+    <ul>
+        <li>HP = 100</li>
+        <li>Energy = 100</li>
+        <li>Damage = 30</li>
+    </ul>
+</li>
+<li>Overrides <code>attack()</code></li>
+<li>Adds <code>highFivesGuys()</code></li>
+</ul>
+</div>
+
+<div class="note">
+<h3>Important Realization</h3>
+<p>
+ex02 introduces no new concept. It exists to reinforce inheritance and overriding.
+Feeling “this is repetition” means you understood ex01 correctly.
+</p>
+</div>
+
+<div class="section">
+<h2>Why Include ScavTrap Files in ex02?</h2>
+<p>
+Because ex02 builds on previous exercises.
+Even if a class is not used in <code>main.cpp</code>, it must exist and compile.
+Evaluators may test it indirectly.
+</p>
+</div>
+
+<div class="section">
+<h2>Makefile Strategy</h2>
+<ul>
+<li>Each exercise is its own program</li>
+<li>Same Makefile structure, different:
+    <ul>
+        <li>NAME</li>
+        <li>SRCS</li>
+    </ul>
+</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Real-World Meaning of Single Inheritance</h2>
+<p>
+Single inheritance models specialization:
+</p>
+<ul>
+<li>UI widgets (Button IS A Widget)</li>
+<li>Files (ImageFile IS A File)</li>
+<li>Networking (TCPConnection IS A Connection)</li>
+<li>Error hierarchies</li>
+</ul>
+</div>
+
+<div class="note">
+<h3>Final Takeaway</h3>
+<p>
+Inheritance is not about games.
+It is about shared structure + specialized behavior.
+</p>
+</div>
+
+<div class="section">
+<h2>Final Mentor Verdict</h2>
+<p>
+You did not memorize.
+You understood.
+That is exactly what CPP03 is meant to teach.
+</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CPP03 Study Sheet — Single Inheritance (ex00–ex02)</title>
+<style>
+  :root{
+    --bg:#0b1020;
+    --panel:#111a33;
+    --card:#0f1730;
+    --text:#e8ecff;
+    --muted:#b8c0ff;
+    --accent:#6ea8ff;
+    --accent2:#7cf0c5;
+    --warn:#ffcc66;
+    --danger:#ff6b6b;
+    --border:rgba(255,255,255,0.10);
+    --shadow:0 8px 24px rgba(0,0,0,.35);
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: radial-gradient(1200px 800px at 20% 10%, #15204a 0%, var(--bg) 55%, #070a15 100%);
+    color:var(--text);
+  }
+  a{color:inherit; text-decoration:none}
+  .layout{
+    display:grid;
+    grid-template-columns: 320px 1fr;
+    min-height:100vh;
+  }
+  aside{
+    position:sticky;
+    top:0;
+    height:100vh;
+    padding:18px 16px;
+    background:linear-gradient(180deg, rgba(17,26,51,.92) 0%, rgba(11,16,32,.92) 100%);
+    border-right:1px solid var(--border);
+    overflow:auto;
+  }
+  .brand{
+    padding:14px 14px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,0.04);
+    border-radius:16px;
+    box-shadow: var(--shadow);
+    margin-bottom:14px;
+  }
+  .brand h1{
+    margin:0 0 6px 0;
+    font-size:18px;
+    letter-spacing:.2px;
+  }
+  .brand p{
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+  }
+  .toc{
+    margin-top:14px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .toc a{
+    padding:10px 12px;
+    border-radius:12px;
+    border:1px solid transparent;
+    color:var(--muted);
+    background:transparent;
+    transition: all .15s ease;
+    font-size:14px;
+    line-height:1.15;
+  }
+  .toc a:hover{
+    color:var(--text);
+    border-color:var(--border);
+    background:rgba(255,255,255,0.04);
+  }
+  .toc small{
+    display:block;
+    color:rgba(184,192,255,.75);
+    font-size:12px;
+    margin-top:4px;
+  }
+  main{
+    padding:26px 26px 80px;
+    overflow:hidden;
+  }
+  .header{
+    max-width:980px;
+    margin:0 auto 18px auto;
+  }
+  .header h2{
+    margin:0 0 6px 0;
+    font-size:28px;
+    letter-spacing:.2px;
+  }
+  .header p{margin:0; color:var(--muted)}
+  .grid{
+    max-width:980px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:16px;
+  }
+  section{
+    border:1px solid var(--border);
+    background:rgba(255,255,255,0.04);
+    border-radius:18px;
+    padding:18px 18px 16px;
+    box-shadow: var(--shadow);
+  }
+  section h3{
+    margin:0 0 10px 0;
+    font-size:18px;
+  }
+  .pillrow{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 0}
+  .pill{
+    font-size:12px;
+    color:rgba(232,236,255,.92);
+    border:1px solid var(--border);
+    background:rgba(255,255,255,0.04);
+    padding:6px 10px;
+    border-radius:999px;
+  }
+  .card{
+    border:1px solid var(--border);
+    background:rgba(15,23,48,0.65);
+    border-radius:16px;
+    padding:14px 14px;
+    margin-top:12px;
+  }
+  .two{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+  }
+  @media (max-width: 980px){
+    .layout{grid-template-columns:1fr}
+    aside{position:relative; height:auto}
+    .two{grid-template-columns:1fr}
+    main{padding:18px}
+  }
+  table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    overflow:hidden;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:rgba(0,0,0,0.15);
+  }
+  th, td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  th{color:var(--text); background:rgba(255,255,255,0.04); font-weight:600}
+  tr:last-child td{border-bottom:none}
+  .mono{font-family:var(--mono)}
+  pre{
+    margin:10px 0 0;
+    padding:12px 12px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:rgba(0,0,0,0.25);
+    overflow:auto;
+    font-family:var(--mono);
+    font-size:13px;
+    line-height:1.45;
+  }
+  .callout{
+    border-radius:16px;
+    padding:12px 12px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,0.04);
+    margin-top:12px;
+  }
+  .callout.warn{border-left:6px solid var(--warn)}
+  .callout.danger{border-left:6px solid var(--danger)}
+  .callout.good{border-left:6px solid var(--accent2)}
+  .callout strong{color:var(--text)}
+  .kbd{
+    font-family:var(--mono);
+    border:1px solid var(--border);
+    background:rgba(255,255,255,0.06);
+    padding:2px 7px;
+    border-radius:8px;
+    font-size:12px;
+  }
+  .divider{
+    height:1px;
+    background:var(--border);
+    margin:14px 0;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <aside>
+    <div class="brand">
+      <h1>CPP03 — Single Inheritance</h1>
+      <p>ex00–ex02, theory-first, with visuals, C vs C++ comparisons, and your confusion log.</p>
+      <div class="pillrow">
+        <span class="pill">C++98</span>
+        <span class="pill">OOP basics</span>
+        <span class="pill">Inheritance</span>
+        <span class="pill">No virtual yet</span>
+      </div>
+    </div>
+
+    <nav class="toc">
+      <a href="#why-cpp">▸ Why C++ after C?<small>Why classes exist at all</small></a>
+      <a href="#class-mental">▸ What is a Class (mental model)<small>Blueprint vs instance</small></a>
+      <a href="#object-mental">▸ What is an Object<small>State + behavior packaged</small></a>
+      <a href="#constructors">▸ Why Constructors exist<small>Birth, validity, RAII mindset</small></a>
+      <a href="#ocf">▸ Canonical Form (WHY not WHAT)<small>Copy rules, self-assignment</small></a>
+      <a href="#encapsulation">▸ Encapsulation (private/protected/public)<small>Boundaries and safety</small></a>
+      <a href="#inheritance">▸ Inheritance (IS-A vs HAS-A)<small>Reuse the right way</small></a>
+      <a href="#public-inh">▸ Why public inheritance matters<small>Type relationship vs access</small></a>
+      <a href="#ctor-chain">▸ Constructor chaining (visual)<small>Base first, derived second</small></a>
+      <a href="#override">▸ Function overriding (mental rule)<small>Same signature, new behavior</small></a>
+      <a href="#ex00">▸ ex00 – ClapTrap (guided)<small>Base class, rules, tests</small></a>
+      <a href="#ex01">▸ ex01 – ScavTrap (guided)<small>Single inheritance practice</small></a>
+      <a href="#ex02">▸ ex02 – FragTrap (guided)<small>Reinforcement + new function</small></a>
+      <a href="#confusions">▸ Common Confusions (YOUR QUESTIONS)<small>0 damage, ::, :Base(name)…</small></a>
+      <a href="#real-life">▸ When inheritance is used in real life<small>UI, files, networking</small></a>
+      <a href="#when-not">▸ When NOT to use inheritance<small>Prefer composition</small></a>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="header">
+      <h2>CPP03 Master Sheet (ex00–ex02)</h2>
+      <p>Goal: understand <strong>single inheritance</strong> deeply (not memorize). Use the left menu to jump around.</p>
+    </div>
+
+    <div class="grid">
+
+      <section id="why-cpp">
+        <h3>Why C++ after C?</h3>
+        <div class="two">
+          <div class="card">
+            <strong>In C</strong>
+            <ul>
+              <li>Data lives in <span class="mono">struct</span>, behavior is separate functions</li>
+              <li>You must manually enforce “rules” (who can change what)</li>
+              <li>Copying and resource handling is manual discipline</li>
+            </ul>
+          </div>
+          <div class="card">
+            <strong>In C++</strong>
+            <ul>
+              <li>Data + behavior packaged into a <span class="mono">class</span></li>
+              <li>Access control: <span class="mono">private/protected/public</span></li>
+              <li>Constructors/destructors enforce valid state automatically</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <strong>Key idea (scientific phrasing)</strong>
+          <p>
+            C++ adds a formal mechanism to maintain <em>invariants</em>:
+            “this object must always be in a valid state.”
+            CPP03 tests you on modeling these invariants across a hierarchy.
+          </p>
+        </div>
+      </section>
+
+      <section id="class-mental">
+        <h3>What is a Class (mental model)</h3>
+        <div class="card">
+          <p><strong>Class = blueprint</strong>. It describes:</p>
+          <ul>
+            <li><strong>State</strong>: variables (attributes)</li>
+            <li><strong>Behavior</strong>: functions (methods)</li>
+            <li><strong>Rules</strong>: who can access what (encapsulation)</li>
+          </ul>
+        </div>
+        <pre>
+Blueprint (Class)         Instances (Objects)
+-----------------         -------------------
+class ClapTrap { ... }    ClapTrap a("A");
+                          ClapTrap b("B");</pre>
+        <div class="callout good">
+          <strong>Mentor rule:</strong> If you can answer “What does this class OWN?” you will design it correctly.
+        </div>
+      </section>
+
+      <section id="object-mental">
+        <h3>What is an Object</h3>
+        <div class="card">
+          <p><strong>Object = one real instance</strong> that has:</p>
+          <ul>
+            <li><strong>Current state</strong> (values of HP/energy/name/etc.)</li>
+            <li><strong>Allowed operations</strong> (attack, repair, take damage)</li>
+          </ul>
+        </div>
+        <pre>
+Object "a"
+---------
+_name        = "A"
+_hitPoints   = 10
+_energyPoints= 10
+_attackDamage= 0
+
+Operations:
+- attack("B")
+- takeDamage(3)
+- beRepaired(2)</pre>
+      </section>
+
+      <section id="constructors">
+        <h3>Why Constructors exist</h3>
+        <div class="two">
+          <div class="card">
+            <strong>Constructor = “birth”</strong>
+            <p>Creates a valid object by setting required initial values.</p>
+          </div>
+          <div class="card">
+            <strong>Destructor = “death”</strong>
+            <p>Final step when object ends. In CPP03, mainly prints messages + shows order.</p>
+          </div>
+        </div>
+
+        <table>
+          <tr><th>Concept</th><th>Meaning</th><th>Why CPP03 cares</th></tr>
+          <tr>
+            <td class="mono">ClapTrap()</td>
+            <td>Default birth</td>
+            <td>Lets you create then assign later; common in C++ patterns</td>
+          </tr>
+          <tr>
+            <td class="mono">ClapTrap(name)</td>
+            <td>Birth with identity</td>
+            <td>Most exercises create named objects</td>
+          </tr>
+          <tr>
+            <td class="mono">~ClapTrap()</td>
+            <td>Death</td>
+            <td>Shows destruction order (esp. with inheritance)</td>
+          </tr>
+        </table>
+
+        <div class="callout warn">
+          <strong>Important:</strong> A constructor is not “repeat initialization”.
+          It’s the <em>only moment</em> you can guarantee the object becomes valid from scratch.
+        </div>
+      </section>
+
+      <section id="ocf">
+        <h3>Canonical Form (WHY not WHAT)</h3>
+        <div class="card">
+          <p><strong>Orthodox Canonical Form</strong> exists because copying objects is a real operation in C++.</p>
+          <p>You must define how your object behaves when it is:</p>
+          <ul>
+            <li>copied at creation (copy constructor)</li>
+            <li>copied after creation (copy assignment)</li>
+            <li>destroyed (destructor)</li>
+          </ul>
+        </div>
+
+        <table>
+          <tr><th>Function</th><th>When it happens</th><th>Why it exists</th></tr>
+          <tr>
+            <td class="mono">T(const T&)</td>
+            <td>New object is born from another</td>
+            <td>Defines the “clone” operation</td>
+          </tr>
+          <tr>
+            <td class="mono">operator=(const T&)</td>
+            <td>Existing object becomes like another</td>
+            <td>Defines replacement without re-birth</td>
+          </tr>
+          <tr>
+            <td class="mono">~T()</td>
+            <td>Object ends</td>
+            <td>Ensures cleanup + teaches order</td>
+          </tr>
+        </table>
+
+        <div class="callout good">
+          <strong>Your correct insight:</strong> Self-assignment check prevents useless work and avoids corruption in complex classes.
+        </div>
+      </section>
+
+      <section id="encapsulation">
+        <h3>Encapsulation (private / protected / public)</h3>
+        <table>
+          <tr><th>Access</th><th>Who can access</th><th>When to use</th></tr>
+          <tr>
+            <td class="mono">private</td>
+            <td>Only the class itself</td>
+            <td>Strongest protection for invariants</td>
+          </tr>
+          <tr>
+            <td class="mono">protected</td>
+            <td>Class + derived classes</td>
+            <td>Inheritance-friendly (CPP03 uses this often)</td>
+          </tr>
+          <tr>
+            <td class="mono">public</td>
+            <td>Everyone</td>
+            <td>API: what outside code is allowed to do</td>
+          </tr>
+        </table>
+
+        <div class="card">
+          <strong>CPP03 reasoning:</strong>
+          <p>
+            ClapTrap attributes are often <span class="mono">protected</span> so children can configure initial stats
+            (HP/Energy/Damage) without creating duplicate data.
+          </p>
+        </div>
+
+        <div class="callout danger">
+          <strong>Evaluation red flag:</strong> Making everything <span class="mono">public</span> to “make it easier”.
+          This breaks encapsulation and signals weak OOP.
+        </div>
+      </section>
+
+      <section id="inheritance">
+        <h3>Inheritance (IS-A vs HAS-A)</h3>
+        <div class="two">
+          <div class="card">
+            <strong>IS-A (inheritance)</strong>
+            <p>Use when the child is a specialized form of the parent.</p>
+            <pre>
+ScavTrap IS A ClapTrap
+FragTrap IS A ClapTrap</pre>
+          </div>
+          <div class="card">
+            <strong>HAS-A (composition)</strong>
+            <p>Use when a class contains another as a part.</p>
+            <pre>
+Car HAS AN Engine
+School HAS Students</pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <strong>Visual hierarchy (CPP03)</strong>
+          <pre>
+ClapTrap
+  ├─ attack(), takeDamage(), beRepaired()
+  ├─ _name, _hitPoints, _energyPoints, _attackDamage
+  ├─ default stats (10/10/0)
+  |
+  ├─ ScavTrap  (100/50/20) + guardGate()
+  |
+  └─ FragTrap  (100/100/30) + highFivesGuys()</pre>
+        </div>
+
+        <div class="callout good">
+          <strong>Your mastered rule:</strong> Base stores the data; derived chooses initial values.
+        </div>
+      </section>
+
+      <section id="public-inh">
+        <h3>Why public inheritance matters</h3>
+        <div class="card">
+          <p>Two different “public/protected/private” ideas exist:</p>
+          <ul>
+            <li><strong>Member access</strong>: private/protected/public inside the class</li>
+            <li><strong>Inheritance mode</strong>: <span class="mono">class Child : public Parent</span></li>
+          </ul>
+        </div>
+
+        <table>
+          <tr><th>Inheritance mode</th><th>Meaning</th><th>CPP03 fit?</th></tr>
+          <tr>
+            <td class="mono">public Parent</td>
+            <td>Child <strong>IS-A</strong> Parent (true type relationship)</td>
+            <td><strong>YES</strong></td>
+          </tr>
+          <tr>
+            <td class="mono">protected Parent</td>
+            <td>Outside can’t treat Child as Parent</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td class="mono">private Parent</td>
+            <td>Child “uses” Parent internally (not IS-A publicly)</td>
+            <td>No</td>
+          </tr>
+        </table>
+
+        <div class="callout warn">
+          <strong>Mentor sentence (use in evaluation):</strong>
+          Public inheritance preserves the IS-A relationship; ScavTrap must be usable as a ClapTrap.
+        </div>
+      </section>
+
+      <section id="ctor-chain">
+        <h3>Constructor chaining (visual)</h3>
+        <div class="card">
+          <p><strong>Rule:</strong> Base constructor runs <em>first</em>. Derived constructor body runs <em>second</em>.</p>
+          <pre>
+Create ScavTrap("Bob")
+
+1) ClapTrap("Bob")   <-- base part is built first
+2) ScavTrap body     <-- then child customizes stats/messages</pre>
+        </div>
+
+        <div class="card">
+          <p><strong>Why <span class="mono">: ClapTrap(name)</span>?</strong></p>
+          <p>
+            It’s the only way to choose which base constructor is called.
+            If you wait inside <span class="mono">{ }</span>, the base already got constructed.
+          </p>
+          <pre>
+ScavTrap::ScavTrap(const std::string &name) : ClapTrap(name)
+{
+    // body runs after base is done
+}</pre>
+        </div>
+
+        <div class="callout danger">
+          <strong>Syntax reminder:</strong> Never put spaces inside <span class="kbd">::</span>.
+          It’s one operator (scope resolution).
+        </div>
+      </section>
+
+      <section id="override">
+        <h3>Function overriding (mental rule)</h3>
+        <div class="card">
+          <p><strong>Override in CPP03</strong> means:</p>
+          <ul>
+            <li>Same function name</li>
+            <li>Same signature (parameters + constness)</li>
+            <li>Child provides new behavior/messages</li>
+          </ul>
+        </div>
+
+        <div class="two">
+          <div class="card">
+            <strong>Mental lookup rule</strong>
+            <pre>
+s.attack()
+
+Look in ScavTrap:
+- found attack()? YES -> use it
+- NO -> fallback to ClapTrap::attack()</pre>
+          </div>
+          <div class="card">
+            <strong>Limit (before CPP04)</strong>
+            <p>
+              Without <span class="mono">virtual</span>, dynamic dispatch isn’t the topic yet.
+              CPP03 focuses on direct object calls and inheritance structure.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="ex00">
+        <h3>ex00 — ClapTrap (guided)</h3>
+        <div class="card">
+          <strong>Goal</strong>
+          <p>Build a correct base class. Everything else depends on it.</p>
+          <div class="pillrow">
+            <span class="pill">HP=10</span><span class="pill">Energy=10</span><span class="pill">Damage=0</span>
+            <span class="pill">No interaction</span>
+          </div>
+        </div>
+
+        <table>
+          <tr><th>Function</th><th>Rule</th><th>Notes</th></tr>
+          <tr>
+            <td class="mono">attack(target)</td>
+            <td>Needs HP&gt;0 and Energy&gt;0; costs 1 energy</td>
+            <td>Does not reduce target HP (target is string)</td>
+          </tr>
+          <tr>
+            <td class="mono">takeDamage(amount)</td>
+            <td>Reduces HP, clamps to 0</td>
+            <td>No energy cost</td>
+          </tr>
+          <tr>
+            <td class="mono">beRepaired(amount)</td>
+            <td>Needs HP&gt;0 and Energy&gt;0; costs 1 energy</td>
+            <td>Increases HP by amount</td>
+          </tr>
+        </table>
+
+        <div class="card">
+          <strong>Minimal test plan</strong>
+          <ul>
+            <li>Normal attack decreases energy</li>
+            <li>Attack blocked at energy=0</li>
+            <li>Attack blocked at HP=0</li>
+            <li>Damage bigger than HP clamps to 0</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="ex01">
+        <h3>ex01 — ScavTrap (guided)</h3>
+        <div class="card">
+          <strong>What changes</strong>
+          <ul>
+            <li>Inherits from ClapTrap: <span class="mono">class ScavTrap : public ClapTrap</span></li>
+            <li>Initial stats become: HP=100, Energy=50, Damage=20</li>
+            <li>Overrides <span class="mono">attack()</span> to print “ScavTrap ...”</li>
+            <li>Adds <span class="mono">guardGate()</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <strong>Constructor chaining test (expected order)</strong>
+          <pre>
+ClapTrap name constructor called
+ScavTrap name constructor called
+...
+ScavTrap destructor called
+ClapTrap destructor called</pre>
+        </div>
+
+        <div class="callout warn">
+          <strong>Important practice point:</strong>
+          Overriding is not “new rules” here — it’s mostly “same rules, different message + stats”.
+        </div>
+      </section>
+
+      <section id="ex02">
+        <h3>ex02 — FragTrap (guided)</h3>
+        <div class="card">
+          <strong>What changes (again)</strong>
+          <ul>
+            <li>Still inherits from ClapTrap directly</li>
+            <li>Initial stats: HP=100, Energy=100, Damage=30</li>
+            <li>Overrides <span class="mono">attack()</span> to print “FragTrap ...”</li>
+            <li>Adds <span class="mono">highFivesGuys()</span></li>
+          </ul>
+        </div>
+
+        <div class="callout good">
+          <strong>Scientific learning note:</strong>
+          ex02 is repetition by design (spaced reinforcement). If it feels “not new”, that means the model is stable.
+        </div>
+
+        <div class="card">
+          <strong>Why include ScavTrap files in ex02?</strong>
+          <p>
+            ex02 is a superset. Even if you don’t instantiate ScavTrap in <span class="mono">main.cpp</span>,
+            the evaluator compiles all files and can test it.
+          </p>
+        </div>
+      </section>
+
+      <section id="confusions">
+        <h3>Common Confusions (YOUR questions) + clean answers</h3>
+
+        <div class="callout danger">
+          <strong>1) “Why is attack damage 0 in ex00?”</strong>
+          <p>Because ex00 initializes damage to 0 by requirement. Damage becomes meaningful in ScavTrap/FragTrap.</p>
+        </div>
+
+        <div class="callout warn">
+          <strong>2) “IS-A means object inside object?”</strong>
+          <p>No. IS-A means “can be treated as”. A ScavTrap can be viewed as a ClapTrap type.</p>
+        </div>
+
+        <div class="callout warn">
+          <strong>3) “Why do we write <span class="mono">: ClapTrap(name)</span>?”</strong>
+          <p>
+            Base must be constructed before derived body runs.
+            The initializer list is the only place to choose the base constructor.
+          </p>
+        </div>
+
+        <div class="callout danger">
+          <strong>4) “Can I put spaces in <span class="mono">::</span>?”</strong>
+          <p>No. <span class="mono">::</span> is a single operator; spacing inside it breaks syntax.</p>
+        </div>
+
+        <div class="callout warn">
+          <strong>5) “Why do we need default constructor if we always pass a name?”</strong>
+          <p>
+            C++ allows create-then-assign patterns. A default constructor makes the type usable in more contexts.
+          </p>
+        </div>
+
+        <div class="callout good">
+          <strong>6) “Why prefix members with underscore?”</strong>
+          <p>
+            Convention to mark member variables and avoid name collisions with parameters (readability + reduces shadowing).
+          </p>
+        </div>
+
+        <div class="callout warn">
+          <strong>7) “Why include ScavTrap files in ex02 if not used?”</strong>
+          <p>Because later exercises include previous classes; evaluation can compile and test them indirectly.</p>
+        </div>
+
+        <div class="callout good">
+          <strong>8) “I understand while reading but might forget on a blank page.”</strong>
+          <p>
+            Normal. The fix is writing from prompts:
+            “Who owns this function?” → write <span class="mono">ClassName::</span>,
+            then copy the exact signature from the header.
+          </p>
+        </div>
+      </section>
+
+      <section id="real-life">
+        <h3>When inheritance is used in real life</h3>
+        <table>
+          <tr><th>Domain</th><th>Base</th><th>Derived</th><th>Why it fits IS-A</th></tr>
+          <tr>
+            <td>UI frameworks</td>
+            <td>Widget</td>
+            <td>Button, TextBox</td>
+            <td>All share draw/position; behavior differs</td>
+          </tr>
+          <tr>
+            <td>File handling</td>
+            <td>File</td>
+            <td>ImageFile, AudioFile</td>
+            <td>All have name/size/open; specialized processing</td>
+          </tr>
+          <tr>
+            <td>Networking</td>
+            <td>Connection</td>
+            <td>TCPConnection, UDPConnection</td>
+            <td>Same API; different protocol behavior</td>
+          </tr>
+          <tr>
+            <td>Error hierarchies</td>
+            <td>Error</td>
+            <td>FileError, NetworkError</td>
+            <td>Shared message/code; specialized meaning</td>
+          </tr>
+        </table>
+
+        <div class="card">
+          <strong>One-sentence scientific summary</strong>
+          <p>
+            Inheritance models <em>specialization under a shared interface</em> while preserving base invariants and reducing duplicated logic.
+          </p>
+        </div>
+      </section>
+
+      <section id="when-not">
+        <h3>When NOT to use inheritance</h3>
+        <div class="two">
+          <div class="card">
+            <strong>Prefer composition (HAS-A) when…</strong>
+            <ul>
+              <li>You only want to reuse a small feature, not an identity</li>
+              <li>The relationship is “uses”, not “is”</li>
+              <li>You expect many combinations of features</li>
+            </ul>
+          </div>
+          <div class="card">
+            <strong>Red flags for inheritance</strong>
+            <ul>
+              <li>Child doesn’t behave like parent (IS-A fails)</li>
+              <li>You override many functions just to disable them</li>
+              <li>You’re inheriting only to reuse code, not model reality</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout warn">
+          <strong>Practical modern rule:</strong> Use inheritance sparingly (often 1 level deep). CPP03 teaches the core mechanics.
+        </div>
+      </section>
+
+      <section>
+        <h3>Quick “blank page” writing drills</h3>
+        <div class="card">
+          <strong>Drill A: Write an override from scratch</strong>
+          <ol>
+            <li>Copy signature from header: <span class="mono">void attack(const std::string &target);</span></li>
+            <li>Choose owner class → write <span class="mono">void ClassName::attack(...)</span></li>
+            <li>Paste the same rule checks as base (HP/energy)</li>
+            <li>Change only the message prefix (ClapTrap/ScavTrap/FragTrap)</li>
+          </ol>
+        </div>
+        <div class="card">
+          <strong>Drill B: Write a derived constructor skeleton</strong>
+          <pre>
+Derived::Derived(const std::string &name) : Base(name)
+{
+    // message
+    // set stats
+}</pre>
+          <p class="note">
+            Always ask: “Which base constructor do I want?” → that decides what you put after <span class="mono">:</span>.
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  // Smooth scroll for sidebar navigation
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      const el = document.querySelector(id);
+      if (!el) return;
+      e.preventDefault();
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, "", id);
+    });
+  });
+</script>
+</body>
+</html>
