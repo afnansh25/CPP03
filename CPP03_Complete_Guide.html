@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPP03 - Complete Guide for Evaluation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #34495e;
+            margin-top: 20px;
+        }
+        .exercise-box {
+            background-color: #ecf0f1;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+        }
+        .inheritance-box {
+            background-color: #e8f5e9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 5px solid #4caf50;
+        }
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        .output-block {
+            background-color: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .checklist {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .checklist li:before {
+            content: "✅ ";
+            margin-right: 10px;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .highlight {
+            background-color: #ffeb3b;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .emoji {
+            font-size: 1.2em;
+        }
+        .tree {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 CPP03 - Complete Guide for Evaluation</h1>
+        
+        <div class="inheritance-box">
+            <h2>📖 THE BIG PICTURE: Building a Robot Factory</h2>
+            <p><strong>Imagine you work for a company that builds robots. You start small and grow bigger...</strong></p>
+        </div>
+
+        <!-- EXERCISE 00 -->
+        <div class="exercise-box">
+            <h2>🤖 Exercise 00: The Base Class (ClapTrap)</h2>
+            
+            <h3>What It Does:</h3>
+            <p>"Ex00 creates the <strong>foundation</strong> - a base class called <code>ClapTrap</code> that represents a basic robot."</p>
+            
+            <h3>The Story:</h3>
+            <p><em>"Your boss says: 'We need a basic robot. Nothing fancy. Just something that can attack, take damage, and repair itself. Make it simple. We'll build on this later.'"</em></p>
+            
+            <h3>Key Components:</h3>
+            
+            <h4>1. Class Structure:</h4>
+            <div class="code-block">class ClapTrap {
+    private:  // Data is protected from outside access
+        std::string _name;
+        int _hitPoints;      // Health (starts at 10)
+        int _energyPoints;   // Energy (starts at 10)
+        int _attackDamage;   // Damage (starts at 0)
+};</div>
+
+            <h4>2. Member Functions:</h4>
+            <ul>
+                <li><code>attack()</code> - Attacks a target, costs 1 energy</li>
+                <li><code>takeDamage()</code> - Reduces hit points</li>
+                <li><code>beRepaired()</code> - Restores hit points, costs 1 energy</li>
+            </ul>
+
+            <h4>3. Orthodox Canonical Form:</h4>
+            <ul>
+                <li>Default constructor</li>
+                <li>Parameterized constructor</li>
+                <li>Copy constructor</li>
+                <li>Copy assignment operator</li>
+                <li>Destructor</li>
+            </ul>
+
+            <h3>What Gets Tested:</h3>
+            <ul>
+                <li>Basic attacks work</li>
+                <li>Energy depletes after 10 actions</li>
+                <li>Dead robots (0 HP) can't act</li>
+                <li>Repair restores health but costs energy</li>
+            </ul>
+
+            <div class="warning">
+                <strong>⚠️ Important:</strong> No inheritance here - this is the parent class!
+            </div>
+        </div>
+
+        <!-- EXERCISE 01 -->
+        <div class="exercise-box">
+            <h2>🛡️ Exercise 01: First Inheritance (ScavTrap)</h2>
+            
+            <h3>The Story:</h3>
+            <p><em>"Your boss comes back: 'That ClapTrap is good, but security guards need more. They need to be STRONGER. Can you make a Security Robot with more health, more energy, and more damage? BUT... don't rebuild everything from scratch! The basic robot already works - just <strong>inherit</strong> from it and <strong>upgrade</strong> it!'"</em></p>
+
+            <div class="inheritance-box">
+                <h3>🔑 WHERE INHERITANCE HAPPENS:</h3>
+                <p><strong>In ScavTrap.hpp line 18:</strong></p>
+                <div class="code-block">class ScavTrap : public ClapTrap  // ← THIS IS INHERITANCE!</div>
+                
+                <h4>What This Line Means:</h4>
+                <ul>
+                    <li><code>ScavTrap</code> <strong>inherits from</strong> <code>ClapTrap</code></li>
+                    <li><code>: public ClapTrap</code> means <strong>public inheritance</strong></li>
+                    <li>ScavTrap automatically gets ALL ClapTrap's features</li>
+                </ul>
+            </div>
+
+            <h3>Key Changes from Ex00:</h3>
+
+            <h4>1. ClapTrap Attributes Changed to Protected:</h4>
+            <div class="code-block">// In ex01/ClapTrap.hpp line 21:
+protected:  // ← Changed from "private"
+    std::string _name;
+    int _hitPoints;
+    int _energyPoints;
+    int _attackDamage;</div>
+            <p><strong>Why?</strong> So ScavTrap can access them directly!</p>
+
+            <h4>2. ScavTrap Has Different Stats:</h4>
+            <ul>
+                <li>Hit Points: <span class="highlight">100</span> (not 10)</li>
+                <li>Energy Points: <span class="highlight">50</span> (not 10)</li>
+                <li>Attack Damage: <span class="highlight">20</span> (not 0)</li>
+            </ul>
+
+            <h4>3. Constructor Chain:</h4>
+            <div class="code-block">ScavTrap::ScavTrap(const std::string &name) : ClapTrap(name)
+//                                             ↑ Calls parent constructor FIRST
+{
+    std::cout << "ScavTrap name constructor called" << std::endl;
+    _hitPoints = 100;     // ← Direct access to protected members
+    _energyPoints = 50;
+    _attackDamage = 20;
+}</div>
+
+            <h4>4. Function Override:</h4>
+            <div class="code-block">void ScavTrap::attack(const std::string &target)
+// This REPLACES ClapTrap's attack() with ScavTrap's version</div>
+
+            <h4>5. New Function:</h4>
+            <div class="code-block">void guardGate();  // ScavTrap-specific ability</div>
+
+            <h3>Expected Output Order:</h3>
+            <div class="output-block">ClapTrap name constructor called   ← Parent constructor FIRST
+ScavTrap name constructor called   ← Child constructor SECOND
+ScavTrap A attacks target, causing 20 points of damage!
+ScavTrap A is now in Gate keeper mode
+ScavTrap destructor called         ← Child destructor FIRST
+ClapTrap destructor called         ← Parent destructor SECOND</div>
+
+            <h3>What You Learn:</h3>
+            <ul>
+                <li><strong>INHERITANCE</strong> - ScavTrap <strong>IS A</strong> ClapTrap (but better)</li>
+                <li><strong>Code Reuse</strong> - Don't copy-paste! Extend what exists</li>
+                <li><strong>Protected vs Private</strong> - Children can access protected members</li>
+                <li><strong>Polymorphism basics</strong> - ScavTrap can do everything ClapTrap does, PLUS more</li>
+            </ul>
+        </div>
+
+        <!-- EXERCISE 02 -->
+        <div class="exercise-box">
+            <h2>💥 Exercise 02: Second Inheritance (FragTrap)</h2>
+            
+            <h3>The Story:</h3>
+            <p><em>"Sales are booming! Now they want a 'Party Robot' for entertainment with even more health, even more energy, and massive damage. Again - DON'T rebuild from scratch! It's still a ClapTrap at its core!"</em></p>
+
+            <div class="inheritance-box">
+                <h3>🔑 WHERE INHERITANCE HAPPENS:</h3>
+                <p><strong>In FragTrap.hpp line 18:</strong></p>
+                <div class="code-block">class FragTrap : public ClapTrap  // ← INHERITANCE AGAIN!</div>
+            </div>
+
+            <h3>Key Points:</h3>
+
+            <h4>1. Same Pattern as ScavTrap:</h4>
+            <ul>
+                <li>Inherits from ClapTrap</li>
+                <li>Uses protected attributes directly</li>
+                <li>Different stats: <span class="highlight">100 HP, 100 Energy, 30 Damage</span></li>
+            </ul>
+
+            <h4>2. Different Special Function:</h4>
+            <div class="code-block">void highFivesGuys();  // FragTrap-specific ability</div>
+
+            <h4>3. The Family Tree:</h4>
+            <div class="tree">        ClapTrap (Base/Parent)
+           /         \
+      ScavTrap    FragTrap
+    (Security)   (Party)</div>
+            <p>Both are <strong>siblings</strong> - they share the same parent but are independent classes.</p>
+
+            <h3>What You Learn:</h3>
+            <ul>
+                <li><strong>Inheritance is a PATTERN</strong> - you can keep creating specialized versions</li>
+                <li><strong>Multiple child classes</strong> from one parent</li>
+                <li><strong>Family tree structure</strong> - modeling real-world relationships</li>
+            </ul>
+        </div>
+
+        <!-- TYPES OF INHERITANCE -->
+        <div class="exercise-box">
+            <h2>🔑 TYPES OF INHERITANCE (THE DIFFERENCE)</h2>
+
+            <h3>✅ Public Inheritance (What You're Using)</h3>
+            <div class="code-block">class ScavTrap : public ClapTrap</div>
+            
+            <h4>What It Means:</h4>
+            <ul>
+                <li>Public members of ClapTrap → Public in ScavTrap</li>
+                <li>Protected members of ClapTrap → Protected in ScavTrap</li>
+                <li>ScavTrap <strong>IS A</strong> ClapTrap (inheritance relationship is visible)</li>
+            </ul>
+            <p><strong>Use When:</strong> You want the child to be a <strong>specialized version</strong> of the parent (like you're doing!)</p>
+
+            <h3>⚠️ Protected Inheritance (Rare)</h3>
+            <div class="code-block">class ScavTrap : protected ClapTrap</div>
+            
+            <h4>What It Means:</h4>
+            <ul>
+                <li>Public members of ClapTrap → <strong>Protected</strong> in ScavTrap</li>
+                <li>Protected members of ClapTrap → Protected in ScavTrap</li>
+                <li>The "IS A" relationship becomes hidden from outside</li>
+            </ul>
+            <p><strong>Use When:</strong> You want to inherit implementation but hide the relationship from users.</p>
+
+            <h3>🔒 Private Inheritance (Also Rare)</h3>
+            <div class="code-block">class ScavTrap : private ClapTrap</div>
+            
+            <h4>What It Means:</h4>
+            <ul>
+                <li>Public members of ClapTrap → <strong>Private</strong> in ScavTrap</li>
+                <li>Protected members of ClapTrap → <strong>Private</strong> in ScavTrap</li>
+                <li>Complete hiding - used for implementation inheritance only</li>
+            </ul>
+            <p><strong>Use When:</strong> You want to reuse code but completely hide that ScavTrap is based on ClapTrap.</p>
+
+            <h3>📊 Comparison Table:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Inheritance Type</th>
+                        <th>Parent's Public</th>
+                        <th>Parent's Protected</th>
+                        <th>"IS A" Visible?</th>
+                        <th>When to Use</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>public</strong> ✅</td>
+                        <td>public</td>
+                        <td>protected</td>
+                        <td>YES</td>
+                        <td>True inheritance (your case)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>protected</strong> ⚠️</td>
+                        <td>protected</td>
+                        <td>protected</td>
+                        <td>Hidden</td>
+                        <td>Implementation detail</td>
+                    </tr>
+                    <tr>
+                        <td><strong>private</strong> 🔒</td>
+                        <td>private</td>
+                        <td>private</td>
+                        <td>Completely hidden</td>
+                        <td>Code reuse only</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- WHAT TO TELL EVALUATOR -->
+        <div class="exercise-box">
+            <h2>💬 WHAT TO TELL THE EVALUATOR</h2>
+
+            <h3>"Where Does Inheritance Happen?"</h3>
+            <div class="inheritance-box">
+                <p><em>"Inheritance happens in <strong>ex01</strong> and <strong>ex02</strong>:</em></p>
+                <ul>
+                    <li><em>In ScavTrap.hpp line 18: <code>class ScavTrap : public ClapTrap</code></em></li>
+                    <li><em>In FragTrap.hpp line 18: <code>class FragTrap : public ClapTrap</code></em></li>
+                </ul>
+                <p><em>Both classes use <strong>public inheritance</strong>, which means ScavTrap and FragTrap <strong>are types of</strong> ClapTrap - they inherit all its features and can add their own."</em></p>
+            </div>
+
+            <h3>"What's the Difference Between Public/Protected/Private Inheritance?"</h3>
+            <div class="inheritance-box">
+                <p><em>"<strong>Public inheritance</strong> (what I used) maintains the 'IS A' relationship - ScavTrap <strong>is a</strong> ClapTrap. The parent's public interface stays public.</em></p>
+                <p><em>Protected and private inheritance are for hiding the relationship - they make parent members more restrictive. You'd use them when you want to reuse implementation without exposing that the classes are related.</em></p>
+                <p><em>For this project, <strong>public inheritance</strong> is correct because ScavTrap and FragTrap truly are specialized versions of ClapTrap."</em></p>
+            </div>
+
+            <h3>"Why Did You Change Attributes from Private to Protected?"</h3>
+            <div class="inheritance-box">
+                <p><em>"In ex00, attributes are <strong>private</strong> because only ClapTrap needs to access them. In ex01 and ex02, I changed them to <strong>protected</strong> so that child classes (ScavTrap and FragTrap) can access them directly. This is more efficient than using getters and setters, and it's the proper way to share data with derived classes while still keeping it hidden from external code."</em></p>
+            </div>
+
+            <h3>"Explain the Constructor/Destructor Chaining"</h3>
+            <div class="inheritance-box">
+                <p><em>"When you create a ScavTrap:</em></p>
+                <ol>
+                    <li><em>ClapTrap constructor runs first (builds the base)</em></li>
+                    <li><em>ScavTrap constructor runs (adds the upgrades)</em></li>
+                </ol>
+                <p><em>When you delete a ScavTrap:</em></p>
+                <ol>
+                    <li><em>ScavTrap destructor runs first</em></li>
+                    <li><em>ClapTrap destructor runs (cleans up the base)</em></li>
+                </ol>
+                <p><em>This is visible in the output messages and ensures proper construction and cleanup order!"</em></p>
+            </div>
+        </div>
+
+        <!-- FINAL CHECKLIST -->
+        <div class="exercise-box">
+            <h2>✅ FINAL VERIFICATION CHECKLIST</h2>
+
+            <h3>Ex00:</h3>
+            <ul class="checklist">
+                <li>ClapTrap class with private attributes</li>
+                <li>attack(), takeDamage(), beRepaired() functions</li>
+                <li>Orthodox Canonical Form</li>
+                <li>Proper tests in main</li>
+            </ul>
+
+            <h3>Ex01:</h3>
+            <ul class="checklist">
+                <li>ClapTrap attributes changed to <strong>protected</strong></li>
+                <li>ScavTrap uses <strong>public inheritance</strong>: <code>class ScavTrap : public ClapTrap</code></li>
+                <li>ScavTrap has different stats (100, 50, 20)</li>
+                <li>ScavTrap overrides attack()</li>
+                <li>ScavTrap has guardGate()</li>
+                <li>Constructor/destructor chaining works</li>
+                <li>Direct access to protected members</li>
+            </ul>
+
+            <h3>Ex02:</h3>
+            <ul class="checklist">
+                <li>FragTrap uses <strong>public inheritance</strong>: <code>class FragTrap : public ClapTrap</code></li>
+                <li>FragTrap has different stats (100, 100, 30)</li>
+                <li>FragTrap overrides attack()</li>
+                <li>FragTrap has highFivesGuys()</li>
+                <li>Same pattern as ex01</li>
+            </ul>
+
+            <div class="inheritance-box" style="margin-top: 30px; text-align: center; background-color: #d4edda; border-color: #28a745;">
+                <h2 style="color: #28a745;">🎉 All exercises are correct and ready for evaluation!</h2>
+            </div>
+        </div>
+
+        <!-- THE FINAL PITCH -->
+        <div class="exercise-box" style="background-color: #e3f2fd; border-left-color: #2196f3;">
+            <h2>🎬 THE FINAL PITCH</h2>
+            <p style="font-size: 1.1em;"><em>"This project simulates real software development. You don't rebuild Microsoft Word every time you want to add a feature - you <strong>extend</strong> it. Inheritance is how we build complex, maintainable systems. Ex00 is the foundation, ex01 proves inheritance works, ex02 shows it's a reusable pattern. This is how every major software project is structured."</em></p>
+        </div>
+
+        <footer style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #ddd; text-align: center; color: #666;">
+            <p>Created for CPP03 Project Evaluation - Good luck! 🚀</p>
+        </footer>
+    </div>
+</body>
+</html>
