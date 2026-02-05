@@ -110,7 +110,6 @@ void ClapTrap::beRepaired(unsigned int amount)
 			  << " hit points!" << std::endl;
 }
 
-// Setters
 void ClapTrap::setName(const std::string &name)
 {
 	_name = name;
@@ -131,7 +130,6 @@ void ClapTrap::setAttackDamage(int attackDamage)
 	_attackDamage = attackDamage;
 }
 
-// Getters
 std::string ClapTrap::getName() const
 {
 	return _name;
